@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace ActivityReportingService.Controllers.ActivityManagement
 {
+    /// <summary>
+    /// This controller manages the activities' operations.
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class ActivityController : ControllerBase
@@ -23,6 +26,10 @@ namespace ActivityReportingService.Controllers.ActivityManagement
             new Activity(){ ActivityId = 5, Name = "info_page", CreatedDate = DateTime.Now.AddMinutes(-3), Value = 57 }
         };
 
+        /// <summary>
+        /// Simple get endpoint
+        /// </summary>
+        /// <returns>List of existing activities</returns>
         [HttpGet]
         public IEnumerable<Activity> Get()
         {
@@ -34,7 +41,7 @@ namespace ActivityReportingService.Controllers.ActivityManagement
         /// </summary>
         /// <param name="key">Activity name</param>
         /// <param name="activityParameter">Getting a value for activity duration. Supports for decimal numbers</param>
-        /// <returns></returns>
+        /// <returns>Created activity record</returns>
         [HttpPost("{key}")]
         public IActionResult Post(string key, [FromBody] ActivityParameter activityParameter)
         {
@@ -49,6 +56,11 @@ namespace ActivityReportingService.Controllers.ActivityManagement
             return Ok(newActivity);
         }
 
+        /// <summary>
+        /// Getting totals by activity name, totals are pruning with greater than 12 hour values.
+        /// </summary>
+        /// <param name="key">Activity name</param>
+        /// <returns>The total activity duration for last 12 hour</returns>
         [HttpGet("{key}/total")]
         public IActionResult GetTotalByKey(string key)
         {
