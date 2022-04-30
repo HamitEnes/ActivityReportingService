@@ -1,4 +1,5 @@
-﻿using ActivityReportingService.Models.ActivityManagement;
+﻿using ActivityReportingService.DataManagement;
+using ActivityReportingService.Models.ActivityManagement;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,18 +14,19 @@ namespace ActivityReportingService.Controllers.ActivityManagement
     [ApiController]
     public class ActivityController : ControllerBase
     {
-        public ActivityController()
-        {
-        }
+        /// <summary>
+        /// Used for accessing DbContext via Dependency Injection
+        /// </summary>
+        private readonly AppDbContext _appDBContext;
 
-        private static readonly Activity[] exampleActivities = new[]
+        /// <summary>
+        /// Constructor for controller class. 
+        /// </summary>
+        /// <param name="appDBContext">Injection for DbContext</param>
+        public ActivityController(AppDbContext appDBContext)
         {
-            new Activity(){ ActivityId = 1, Name = "learn_more_page", CreatedDate = DateTime.Now.AddMinutes(-781), Value = 16 },
-            new Activity(){ ActivityId = 2, Name = "learn_more_page", CreatedDate = DateTime.Now.AddMinutes(-510), Value = 5 },
-            new Activity(){ ActivityId = 3, Name = "learn_more_page", CreatedDate = DateTime.Now.AddSeconds(-50), Value = 32 },
-            new Activity(){ ActivityId = 4, Name = "learn_more_page", CreatedDate = DateTime.Now.AddSeconds(-3), Value = 4 },
-            new Activity(){ ActivityId = 5, Name = "info_page", CreatedDate = DateTime.Now.AddMinutes(-3), Value = 57 }
-        };
+            _appDBContext = appDBContext;
+        }
 
         /// <summary>
         /// Simple get endpoint
@@ -33,7 +35,7 @@ namespace ActivityReportingService.Controllers.ActivityManagement
         [HttpGet]
         public IEnumerable<Activity> Get()
         {
-            return exampleActivities;
+            return _appDBContext.Activities;
         }
 
         /// <summary>
@@ -48,11 +50,13 @@ namespace ActivityReportingService.Controllers.ActivityManagement
             // Currently ActivityId not managed by datasource and given static int number.
             Activity newActivity = new Activity()
             {
-                ActivityId = 6,
                 Name = key,
                 CreatedDate = DateTime.Now,
                 Value = (int)Math.Round(activityParameter.Value)
             };
+
+            _appDBContext.Activities.Add(newActivity);
+            _appDBContext.SaveChanges();
             return Ok(newActivity);
         }
 
@@ -65,13 +69,13 @@ namespace ActivityReportingService.Controllers.ActivityManagement
         public IActionResult GetTotalByKey(string key)
         {
             // this check ensures that, total requested activity is exists.
-            if (!exampleActivities.Any(_ => _.Name == key))
+            if (!_appDBContext.Activities.Any(_ => _.Name == key))
             {
                 return NotFound($"{key} activity not found");
             }
 
             // firstly filtering by activity name after that pruning greater than 12 hour old activities.
-            return Ok(exampleActivities.Where(_ => _.Name == key && _.CreatedDate >= DateTime.Now.AddHours(-12)).Sum(_ => _.Value));
+            return Ok(_appDBContext.Activities.Where(_ => _.Name == key && _.CreatedDate >= DateTime.Now.AddHours(-12)).Sum(_ => _.Value));
         }
     }
 }
