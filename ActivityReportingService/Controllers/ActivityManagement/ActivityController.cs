@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ActivityReportingService.Controllers.ActivityManagement
 {
@@ -26,6 +27,19 @@ namespace ActivityReportingService.Controllers.ActivityManagement
         public IEnumerable<Activity> Get()
         {
             return exampleActivities;
+        }
+
+        [HttpGet("{key}/total")]
+        public IActionResult GetTotalByKey(string key)
+        {
+            // this check ensures that, total requested activity is exists.
+            if (!exampleActivities.Any(_ => _.Name == key))
+            {
+                return NotFound($"{key} activity not found");
+            }
+
+            // firstly filtering by activity name after that pruning greater than 12 hour old activities.
+            return Ok(exampleActivities.Where(_ => _.Name == key && _.CreatedDate >= DateTime.Now.AddHours(-12)).Sum(_ => _.Value));
         }
     }
 }
