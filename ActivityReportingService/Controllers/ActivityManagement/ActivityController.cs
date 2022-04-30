@@ -1,7 +1,6 @@
 ﻿using ActivityReportingService.Interfaces.ActivityManagement;
 using ActivityReportingService.Models.ActivityManagement;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace ActivityReportingService.Controllers.ActivityManagement
 {
@@ -24,9 +23,9 @@ namespace ActivityReportingService.Controllers.ActivityManagement
         /// </summary>
         /// <returns>List of existing activities</returns>
         [HttpGet]
-        public IEnumerable<Activity> Get()
+        public IActionResult Get()
         {
-            return _activityService.GetActivities();
+            return Ok(_activityService.GetActivities());
         }
 
         /// <summary>

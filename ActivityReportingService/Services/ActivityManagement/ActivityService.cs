@@ -1,8 +1,8 @@
 ﻿using ActivityReportingService.DataManagement;
 using ActivityReportingService.Interfaces.ActivityManagement;
 using ActivityReportingService.Models.ActivityManagement;
-using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ActivityReportingService.Services.ActivityManagement
@@ -30,7 +30,7 @@ namespace ActivityReportingService.Services.ActivityManagement
         /// Getting all activities
         /// </summary>
         /// <returns>All activities</returns>
-        public DbSet<Activity> GetActivities()
+        public IEnumerable<Activity> GetActivities()
         {
             return _appDbContext.Activities;
         }
