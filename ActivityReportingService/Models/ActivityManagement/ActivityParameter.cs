@@ -1,4 +1,6 @@
-﻿namespace ActivityReportingService.Models.ActivityManagement
+﻿using System;
+
+namespace ActivityReportingService.Models.ActivityManagement
 {
     /// <summary>
     /// In Site Activity Reporting Service documentation. There is a little info about that,
@@ -9,5 +11,11 @@
     public class ActivityParameter
     {
         public decimal Value { get; set; }
+
+        /// <summary>
+        /// This parameter value not requiring while API works.
+        /// For testing purpose ( because of pruning data providing ) using.
+        /// </summary>
+        public DateTime Date { get; set; }
     }
 }
