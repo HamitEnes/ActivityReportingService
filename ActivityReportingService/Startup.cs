@@ -1,4 +1,5 @@
 using ActivityReportingService.DataManagement;
+using ActivityReportingService.Interfaces.ActivityManagement;
 using ActivityReportingService.Services.ActivityManagement;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +31,7 @@ namespace ActivityReportingService
             });
 
             // Added scoped like DbContext. Manages Activity related operations. 
-            services.AddScoped<ActivityService>();
+            services.AddScoped<IActivityService, ActivityService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
