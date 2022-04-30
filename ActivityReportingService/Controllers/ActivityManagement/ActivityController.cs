@@ -29,6 +29,26 @@ namespace ActivityReportingService.Controllers.ActivityManagement
             return exampleActivities;
         }
 
+        /// <summary>
+        /// Creating new activities. Value may be decimal number and will be rounded to nearest number.
+        /// </summary>
+        /// <param name="key">Activity name</param>
+        /// <param name="activityParameter">Getting a value for activity duration. Supports for decimal numbers</param>
+        /// <returns></returns>
+        [HttpPost("{key}")]
+        public IActionResult Post(string key, [FromBody] ActivityParameter activityParameter)
+        {
+            // Currently ActivityId not managed by datasource and given static int number.
+            Activity newActivity = new Activity()
+            {
+                ActivityId = 6,
+                Name = key,
+                CreatedDate = DateTime.Now,
+                Value = (int)Math.Round(activityParameter.Value)
+            };
+            return Ok(newActivity);
+        }
+
         [HttpGet("{key}/total")]
         public IActionResult GetTotalByKey(string key)
         {
