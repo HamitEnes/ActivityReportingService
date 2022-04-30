@@ -3,6 +3,7 @@ using ActivityReportingService.Interfaces.ActivityManagement;
 using ActivityReportingService.Models.ActivityManagement;
 using ActivityReportingService.Tests.Services.ActivityManagement;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -155,6 +156,47 @@ namespace ActivityReportingService.Tests.Controllers.ActivityManagement
             // Assert
             Assert.IsType<OkObjectResult>(okResultGet as OkObjectResult);
             Assert.Equal(47, (okResultGet as OkObjectResult).Value);
+        }
+
+        /// <summary>
+        /// In this scenario, some of activities are created and calculating total durations.
+        /// Difference between previous method is that, this scenario has pruning activities.
+        /// </summary>
+        [Fact]
+        public void Add_SomeActivities_ReturnsExpectedResultWithPruningData()
+        {
+            // Arrange
+            string key = "learn_more_page";
+            var activityParameter = new ActivityParameter();
+
+            // Act
+            activityParameter.Value = 16;
+            activityParameter.Date = DateTime.Now.AddMinutes(-781);
+            _controller.Post(key, activityParameter);
+
+            activityParameter.Value = 5;
+            activityParameter.Date = DateTime.Now.AddMinutes(-510);
+            _controller.Post(key, activityParameter);
+
+            activityParameter.Value = 32;
+            activityParameter.Date = DateTime.Now.AddSeconds(-50);
+            _controller.Post(key, activityParameter);
+
+            activityParameter.Value = 4;
+            activityParameter.Date = DateTime.Now.AddSeconds(-3);
+            _controller.Post(key, activityParameter);
+
+            key = "info_page";
+            activityParameter.Value = 304;
+            activityParameter.Date = DateTime.Now.AddSeconds(-203);
+            _controller.Post(key, activityParameter);
+
+            key = "learn_more_page";
+            var okResultGet = _controller.GetTotalByKey(key);
+
+            // Assert
+            Assert.IsType<OkObjectResult>(okResultGet as OkObjectResult);
+            Assert.Equal(41, (okResultGet as OkObjectResult).Value);
         }
     }
 }

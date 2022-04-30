@@ -18,7 +18,7 @@ namespace ActivityReportingService.Utils.ActivityManagement
             return new Activity()
             {
                 Name = activityName,
-                CreatedDate = DateTime.Now,
+                CreatedDate = activityParameter.Date == DateTime.MinValue ? DateTime.Now : activityParameter.Date,
                 Value = (int)Math.Round(activityParameter.Value)
             };
         }
