@@ -1,4 +1,5 @@
 using ActivityReportingService.DataManagement;
+using ActivityReportingService.Services.ActivityManagement;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +22,15 @@ namespace ActivityReportingService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            // Used default scoped lifetime. Manages Db related operations.
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseInMemoryDatabase("ActivityReportingServiceDB");
             });
+
+            // Added scoped like DbContext. Manages Activity related operations. 
+            services.AddScoped<ActivityService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
