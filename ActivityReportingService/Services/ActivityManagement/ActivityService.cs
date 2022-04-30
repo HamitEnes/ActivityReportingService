@@ -1,9 +1,8 @@
 ﻿using ActivityReportingService.DataManagement;
 using ActivityReportingService.Interfaces.ActivityManagement;
 using ActivityReportingService.Models.ActivityManagement;
-using System;
+using ActivityReportingService.Utils.ActivityManagement;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ActivityReportingService.Services.ActivityManagement
 {
@@ -43,14 +42,10 @@ namespace ActivityReportingService.Services.ActivityManagement
         /// <returns>Created activity</returns>
         public Activity CreateActivity(string activityName, ActivityParameter activityParameter)
         {
-            Activity newActivity = new Activity()
-            {
-                Name = activityName,
-                CreatedDate = DateTime.Now,
-                Value = (int)Math.Round(activityParameter.Value)
-            };
+            Activity newActivity = ActivityHelper.CreateActivity(activityName, activityParameter);
 
             _appDbContext.Activities.Add(newActivity);
+
             // After adding newActivity to Activities DbSet, ActivityId value is assigned.
             _appDbContext.SaveChanges();
             return newActivity;
@@ -63,7 +58,7 @@ namespace ActivityReportingService.Services.ActivityManagement
         /// <returns>Total duration for last 12 hour</returns>
         public int GetTotalActivityDurationByName(string activityName)
         {
-            return _appDbContext.Activities.Where(_ => _.Name == activityName && _.CreatedDate >= DateTime.Now.AddHours(-12)).Sum(_ => _.Value);
+            return ActivityHelper.GetTotalActivityDurationByName(_appDbContext.Activities, activityName);
         }
 
         /// <summary>
@@ -73,7 +68,7 @@ namespace ActivityReportingService.Services.ActivityManagement
         /// <returns>State of existance for specified activity name</returns>
         public bool IsActivityExistingByName(string activityName)
         {
-            return _appDbContext.Activities.Any(_ => _.Name == activityName);
+            return ActivityHelper.IsActivityExistingByName(_appDbContext.Activities, activityName);
         }
     }
 }
