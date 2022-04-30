@@ -1,5 +1,5 @@
-﻿using ActivityReportingService.Models.ActivityManagement;
-using ActivityReportingService.Services.ActivityManagement;
+﻿using ActivityReportingService.Interfaces.ActivityManagement;
+using ActivityReportingService.Models.ActivityManagement;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -12,9 +12,9 @@ namespace ActivityReportingService.Controllers.ActivityManagement
     [ApiController]
     public class ActivityController : ControllerBase
     {
-        private ActivityService _activityService;
+        private IActivityService _activityService;
 
-        public ActivityController(ActivityService activityService)
+        public ActivityController(IActivityService activityService)
         {
             _activityService = activityService;
         }

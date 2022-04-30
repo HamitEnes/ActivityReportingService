@@ -1,4 +1,5 @@
 ﻿using ActivityReportingService.DataManagement;
+using ActivityReportingService.Interfaces.ActivityManagement;
 using ActivityReportingService.Models.ActivityManagement;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,7 +10,7 @@ namespace ActivityReportingService.Services.ActivityManagement
     /// <summary>
     /// A service class for activity related operations.
     /// </summary>
-    public class ActivityService
+    public class ActivityService : IActivityService
     {
         /// <summary>
         /// Used for accessing DbContext via Dependency Injection
