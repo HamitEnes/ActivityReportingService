@@ -1,5 +1,5 @@
 ﻿using ActivityReportingService.Models.ActivityManagement;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace ActivityReportingService.Interfaces.ActivityManagement
 {
@@ -9,7 +9,7 @@ namespace ActivityReportingService.Interfaces.ActivityManagement
         /// Getting all activities
         /// </summary>
         /// <returns>All activities</returns>
-        public DbSet<Activity> GetActivities();
+        public IEnumerable<Activity> GetActivities();
 
         /// <summary>
         /// Creating activity for specified duration value
